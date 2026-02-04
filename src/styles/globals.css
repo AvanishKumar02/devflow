@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Roboto Mono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-background: oklch(0.15 0 0); /* #08090A approx */
+  --color-foreground: oklch(0.98 0 0); /* #F7F8F8 approx */
+
+  --color-card: oklch(0.18 0 0); /* #111214 */
+  --color-card-foreground: oklch(0.98 0 0);
+
+  --color-popover: oklch(0.18 0 0);
+  --color-popover-foreground: oklch(0.98 0 0);
+
+  --color-primary: oklch(0.55 0.15 270); /* #5E6AD2 Indigo */
+  --color-primary-foreground: oklch(0.98 0 0);
+
+  --color-secondary: oklch(0.25 0 0);
+  --color-secondary-foreground: oklch(0.98 0 0);
+
+  --color-muted: oklch(0.25 0 0);
+  --color-muted-foreground: oklch(0.65 0 0); /* #8A8F98 */
+
+  --color-accent: oklch(0.25 0 0);
+  --color-accent-foreground: oklch(0.98 0 0);
+
+  --color-destructive: oklch(0.6 0.2 20); /* Reddish */
+  --color-destructive-foreground: oklch(0.98 0 0);
+
+  --color-border: oklch(0.3 0 0); /* #2D2F33 */
+  --color-input: oklch(0.3 0 0);
+  --color-ring: oklch(0.55 0.15 270);
+
+  --radius-lg: 0.5rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
