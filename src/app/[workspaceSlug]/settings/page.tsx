@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
-import { WorkspaceRole } from "../../../../generated/prisma";
+import { WorkspaceRole } from "../../../../generated/prisma/index-browser.js";
 
 export default function SettingsPage({
   params,

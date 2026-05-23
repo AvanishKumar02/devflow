@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { IssueStatus, IssuePriority, Issue, Project, User, Epic } from "../../generated/prisma";
+import type { IssueStatus, IssuePriority, Issue, Project, User, Epic } from "../../generated/prisma/index-browser.js";
 import { api } from "@/trpc/react";
 
 type IssueWithDetails = Issue & {
