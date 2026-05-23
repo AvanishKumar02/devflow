@@ -1,29 +1,51 @@
-# Create T3 App
+# DevFlow
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+DevFlow is a Kanban board and issue tracker designed for software teams.
 
-## What's next? How do I make an app with this?
+## Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Workspaces**: Manage separate workspaces with custom slugs.
+- **Roles**: Assign roles (OWNER, ADMIN, MEMBER, VIEWER) to control permissions.
+- **Projects**: Set up multiple projects with custom keys for issue numbers.
+- **Kanban Board**: Drag-and-drop issue cards to update status.
+- **Cycles and Epics**: Track sprints and project milestones.
+- **Comments and Activity Logs**: Collaborate and audit issue changes automatically.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Tech Stack
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Framework**: Next.js 15 (App Router, React 19)
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **APIs**: tRPC v11 and TanStack React Query v5
+- **Auth**: Better Auth (Session-based)
+- **UI & Layout**: Tailwind CSS v4, shadcn/ui, Lucide Icons, dnd-kit
 
-## Learn More
+## Setup
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+1. **Install dependencies**:
+   ```bash
+   pnpm install
+   ```
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+2. **Database setup**:
+   ```bash
+   pnpm postinstall
+   pnpm db:push
+   ```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+3. **Run local server**:
+   ```bash
+   pnpm dev
+   ```
 
-## How do I deploy this?
+The server runs on port 3000.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Development Scripts
+
+- **Check User Accounts**: `npx tsx check-user.ts`
+- **List All Users**: `npx tsx list-users.ts`
+- **Database Diagnostics**: `npx tsx debug-all.ts`
+
+## License
+
+Private and proprietary.
