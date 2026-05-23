@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { IssueStatus, IssuePriority } from "../../generated/prisma/index-browser.js";
+import { IssueStatus, IssuePriority } from "../generated/prisma/index-browser.js";
 import { Plus, AlertCircle } from "lucide-react";
 import { api } from "@/trpc/react";
 import { 

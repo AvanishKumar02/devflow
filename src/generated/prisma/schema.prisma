@@ -1,0 +1,272 @@
+// Prisma schema for Better Auth
+// learn more: https://better-auth.com/docs/concepts/database
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+// NOTE: When using mysql or sqlserver, uncomment the //@db.Text annotations in model Account below
+// Further reading:
+// https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
+
+  @@index([name])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  posts         Post[]
+
+  // DevFlow Relations
+  memberships    WorkspaceMember[]
+  assignedIssues Issue[]           @relation("AssignedIssues")
+  createdIssues  Issue[]           @relation("CreatedIssues")
+  comments       Comment[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  WorkspaceMember[]
+  projects Project[]
+  issues   Issue[]
+  tags     Tag[]
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model WorkspaceMember {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole @default(MEMBER)
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  key         String // e.g., "PROJ" for PROJ-1
+  description String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  issues    Issue[]
+  cycles    Cycle[]
+  epics     Epic[]
+
+  @@unique([workspaceId, key])
+}
+
+enum IssueStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELED
+}
+
+enum IssuePriority {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Issue {
+  id          String        @id @default(cuid())
+  number      Int // Auto-incrementing number within project (PROJ-1, PROJ-2)
+  title       String
+  description String?
+  status      IssueStatus   @default(BACKLOG)
+  priority    IssuePriority @default(NONE)
+
+  workspaceId String
+  projectId   String
+  assigneeId  String?
+  creatorId   String
+  cycleId     String?
+  epicId      String?
+  parentId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee  User?     @relation("AssignedIssues", fields: [assigneeId], references: [id])
+  creator   User      @relation("CreatedIssues", fields: [creatorId], references: [id])
+  cycle     Cycle?    @relation(fields: [cycleId], references: [id])
+  epic      Epic?     @relation(fields: [epicId], references: [id])
+
+  parent   Issue?  @relation("IssueToIssue", fields: [parentId], references: [id])
+  children Issue[] @relation("IssueToIssue")
+
+  tags         IssueTag[]
+  comments     Comment[]
+  activityLogs ActivityLog[]
+
+  @@unique([projectId, number])
+  @@index([workspaceId])
+  @@index([projectId])
+  @@index([assigneeId])
+}
+
+model Cycle {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues  Issue[]
+}
+
+model Epic {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues  Issue[]
+}
+
+model Tag {
+  id          String  @id @default(cuid())
+  name        String
+  color       String?
+  workspaceId String
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  issues    IssueTag[]
+
+  @@unique([workspaceId, name])
+}
+
+model IssueTag {
+  issueId String
+  tagId   String
+
+  issue Issue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([issueId, tagId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  issueId   String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  issue Issue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  issueId   String
+  userId    String
+  action    String // e.g., "STATUS_CHANGE", "PRIORITY_CHANGE"
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  issue Issue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String? //@db.Text
+  userAgent String? //@db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String //@db.Text
+  providerId            String //@db.Text
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String? //@db.Text
+  refreshToken          String? //@db.Text
+  idToken               String? //@db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String? //@db.Text
+  password              String? //@db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String //@db.Text
+  value      String //@db.Text
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}

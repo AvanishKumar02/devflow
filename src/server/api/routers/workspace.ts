@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { WorkspaceRole } from "../../../../generated/prisma/index.js";
+import { WorkspaceRole } from "../../../generated/prisma/index.js";
 
 const RESERVED_SLUGS = ["api", "workspaces", "settings", "login", "signup", "auth", "dashboard", "admin", "my-issues"];
 

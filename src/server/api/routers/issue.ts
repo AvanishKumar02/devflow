@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { IssueStatus, IssuePriority } from "../../../../generated/prisma/index.js";
+import { IssueStatus, IssuePriority } from "../../../generated/prisma/index.js";
 
 export const issueRouter = createTRPCRouter({
   create: protectedProcedure

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Issue, Project, User, Epic } from "../../generated/prisma/index-browser.js";
+import type { Issue, Project, User, Epic } from "../generated/prisma/index-browser.js";
 import { CircleDot, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

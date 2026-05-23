@@ -21,8 +21,8 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { IssueStatus } from "../../generated/prisma/index-browser.js";
-import type { IssuePriority, Issue, Project, User, Epic } from "../../generated/prisma/index-browser.js";
+import { IssueStatus } from "../generated/prisma/index-browser.js";
+import type { IssuePriority, Issue, Project, User, Epic } from "../generated/prisma/index-browser.js";
 import { api } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import { MoreHorizontal, GripVertical } from "lucide-react";

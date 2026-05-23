@@ -1,6 +1,6 @@
 "use client";
 
-import { IssueStatus, IssuePriority } from "../../generated/prisma/index-browser.js";
+import { IssueStatus, IssuePriority } from "../generated/prisma/index-browser.js";
 import { 
   Select, 
   SelectContent, 
