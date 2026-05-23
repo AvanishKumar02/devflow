@@ -1,7 +1,27 @@
+import { type Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/server/better-auth/server";
 import { api } from "@/trpc/server";
 import { WorkspaceSidebar } from "@/components/workspace-sidebar";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ workspaceSlug: string }>;
+}): Promise<Metadata> {
+  const { workspaceSlug } = await params;
+  try {
+    const workspace = await api.workspace.getBySlug({ slug: workspaceSlug });
+    return {
+      title: workspace.name,
+    };
+  } catch {
+    return {
+      title: "Workspace",
+    };
+  }
+}
+
 
 export default async function WorkspaceLayout({
   children,

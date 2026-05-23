@@ -1,7 +1,12 @@
+import { type Metadata } from "next";
 import { api } from "@/trpc/server";
 import { getSession } from "@/server/better-auth/server";
 import { IssueList } from "@/components/issue-list";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "My Issues",
+};
 
 export default async function MyIssuesPage({
   params,

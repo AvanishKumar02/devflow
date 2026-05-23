@@ -1,6 +1,27 @@
+import { type Metadata } from "next";
 import { api, HydrateClient } from "@/trpc/server";
 import { CreateIssueModal } from "@/components/create-issue-modal";
 import { ProjectView } from "@/components/project-view";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ workspaceSlug: string; projectKey: string }>;
+}): Promise<Metadata> {
+  const { workspaceSlug, projectKey } = await params;
+  try {
+    const workspace = await api.workspace.getBySlug({ slug: workspaceSlug });
+    const project = workspace.projects.find(p => p.key === projectKey);
+    return {
+      title: project ? project.name : "Project",
+    };
+  } catch {
+    return {
+      title: "Project",
+    };
+  }
+}
+
 
 export default async function ProjectPage({
   params,
